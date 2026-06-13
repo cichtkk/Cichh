@@ -1,0 +1,213 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+    font-family: 'Courier New', 'VT323', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* CRT effect */
+.crt::before {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 0, 0.03) 0px,
+        rgba(0, 255, 0, 0.03) 2px,
+        transparent 2px,
+        transparent 6px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    background: #000000cc;
+    backdrop-filter: blur(3px);
+    border: 3px solid #7a6e4e;
+    box-shadow: 0 0 20px rgba(90, 70, 30, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.1);
+    padding: 2rem;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+/* header VHS style */
+.header {
+    text-align: center;
+    border-bottom: 2px dashed #b89a5a;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2.2rem;
+    letter-spacing: 6px;
+    color: #efdba1;
+    text-shadow: 0 0 5px #ffd966, 0 0 15px #aa7c3a;
+    font-weight: normal;
+    word-break: keep-all;
+}
+
+.sub {
+    color: #b3a165;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    letter-spacing: 2px;
+}
+
+.glitch {
+    animation: glitch 1.5s infinite;
+}
+
+@keyframes glitch {
+    0%, 100% { text-shadow: 2px 0 red, -2px 0 blue; opacity: 0.9; }
+    25% { text-shadow: -2px 0 red, 2px 0 blue; }
+    50% { text-shadow: 2px 0 blue, -2px 0 red; }
+    75% { text-shadow: -2px 0 blue, 2px 0 red; }
+}
+
+/* image area */
+.image-frame {
+    background: #221c0f;
+    border: 5px solid #5e4b2b;
+    padding: 12px;
+    margin-bottom: 2rem;
+    box-shadow: inset 0 0 30px #00000055, 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.backrooms-img {
+    width: 100%;
+    background: #2a2a1c;
+    display: block;
+    filter: sepia(0.6) hue-rotate(15deg) brightness(0.9) contrast(1.2);
+    border: 1px solid #cbb26a;
+    cursor: crosshair;
+}
+
+.image-hint {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: #b89a5a;
+}
+
+/* morse panel */
+.morse-panel {
+    background: #0f0e0a;
+    border-left: 8px solid #dbb42c;
+    padding: 1.2rem;
+    margin: 1.5rem 0;
+    font-family: monospace;
+}
+
+.morse-title {
+    color: #e6c87a;
+    margin-bottom: 12px;
+}
+
+.morse-line {
+    color: #e0cca6;
+    font-size: 1.2rem;
+    word-break: break-all;
+    background: #00000066;
+    padding: 8px;
+    border-radius: 6px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.decode-area {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+input {
+    flex: 2;
+    background: #1e1b12;
+    border: 1px solid #b49450;
+    color: #f7eac5;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+button {
+    background: #5e4b2b;
+    border: none;
+    color: #fff0c0;
+    padding: 10px 20px;
+    font-family: monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #8b6d3c;
+    box-shadow: 0 0 8px #ffd58c;
+}
+
+.log {
+    margin-top: 15px;
+    background: #000000aa;
+    padding: 12px;
+    border-left: 3px solid #e0b354;
+    font-size: 0.9rem;
+    color: #cbc08a;
+}
+
+.morse-hint {
+    font-size: 0.75rem;
+    color: #9b8a54;
+    margin-top: 10px;
+}
+
+/* secret terminal */
+.secret-terminal {
+    margin-top: 25px;
+    background: #030301;
+    padding: 1rem;
+    border: 1px solid #7f693e;
+    font-size: 0.8rem;
+}
+
+.terminal-line {
+    color: #b3ffa7;
+    font-family: monospace;
+    border-bottom: 1px dotted #4f431f;
+    padding: 6px 0;
+}
+
+.blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.7rem;
+    color: #6c5d3a;
+}
