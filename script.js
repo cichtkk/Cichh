@@ -1,111 +1,218 @@
-// --- Diálogo morse entre os cientistas Dr. Voss e Dra. Elara ---
-// Cada objeto contém: morse, resposta esperada (inglês minúsculo sem pontuação), mensagem de retorno
+// ============================================
+// FASES DO ARG
+// ============================================
 
-const scenes = [
+// FASE 1: MORSE (diálogo dos cientistas)
+const morseMessages = [
     {
         morse: ". .-.. .- .-. .- --..-- / ...- --- ... ... --..-- / ...- --- -.-. . / ...- .. ..- / .- / -.-. .- ... .- --..-- / --.- ..- . / -. .- --- / . ... - .- --- / -. --- / -- .- .--. .- ..--..",
-        expected: "elara you see a house that is not on the map",
-        response: "🔬 DR. VOSS: 'Elara, você viu a casa que não está no mapa?' — A casa se move entre frames."
+        resposta: "elara voce viu uma casa que nao esta no mapa",
+        dica: "Pergunta de Voss para Elara sobre uma casa invisível"
     },
     {
         morse: "... .. -- --..-- / ...- --- ... ... .-.-.- / . .-.. .- .-.-.- / . .-.. .- / .--. .. ... -.-. .- / . -- / ..-. .-. . --.- ..- . -. -.-. .. .- / .---- ---.. .--... --... .... --..",
-        expected: "sim voss ela pisca em frequencia 18 ponto 7 hz",
-        response: "📡 DRA. ELARA: 'Sim, Voss. Ela pisca em frequência 18.7 Hz.' — O chão vibra nesta frequência."
+        resposta: "sim voss ela pisca em frequencia 18 ponto 7 hz",
+        dica: "Elara confirma a frequência 18.7 Hz"
     },
     {
         morse: ".- ... / .--. .- .-. . -.. . ... / . ... - .- --- / -- ..- .-. -- ..- .-. .- -. -.. --- / . -- / -... .. -. .- .-. .. --- .-.-.-",
-        expected: "as paredes estao murmurando em binario",
-        response: "🧱 DR. VOSS: 'As paredes estão murmurando em binário.' — Escute os 0s e 1s na estática."
-    },
-    {
-        morse: ".-.-. / .--. .- .-. . -.. . ... / . ... - .- --- / -- ..- .-. -- ..- .-. .- -. -.. --- / . -- / -... .. -. .- .-. .. --- .-.-.-",
-        expected: "as paredes estao murmurando em binario",
-        response: "🔄 (ECO) As paredes repetem: 01001000 01001111 01010101 01010011 01000101 — 'HOUSE'"
+        resposta: "as paredes estao murmurando em binario",
+        dica: "Voss percebe que as paredes sussurram em binário"
     },
     {
         morse: ". .-.. .- .-. .- --..-- / ... .- .. .- / -.. .- / .- .. / .- --. --- .-. .- .-.-.-",
-        expected: "elara saia dai agora",
-        response: "⚠️ DR. VOSS: 'Elara, saia daí agora.' — A estática aumenta."
+        resposta: "elara saia dai agora",
+        dica: "Alerta urgente de Voss"
     },
     {
         morse: "- .- .-. -.. . / -.. . -- .- .. ... --..-- / ...- --- ... ... .-.-.- / . .-.. .- / -- . / -.... .- -- --- ..- / .--. . .-.. --- / -- . ..- / -. --- -- . .-.-.-",
-        expected: "tarde demais voss ela me chamou pelo meu nome",
-        response: "🌀 DRA. ELARA: 'Tarde demais, Voss. Ela me chamou pelo meu nome.' — A casa agora te observa."
+        resposta: "tarde demais voss ela me chamou pelo meu nome",
+        dica: "Última mensagem assustadora de Elara"
     }
 ];
 
-let currentScene = 0;
+// FASE 2: BINÁRIO
+const binaryMessages = [
+    {
+        binario: "01001000 01001111 01010101 01010011 01000101",
+        resposta: "house",
+        dica: "Traduza o binário para ASCII"
+    },
+    {
+        binario: "01010111 01000101 01001100 01000011 01001111 01001101 01000101",
+        resposta: "welcome",
+        dica: "Primeira palavra da saudação da casa"
+    },
+    {
+        binario: "01001000 01000101 01001100 01001100 01001111",
+        resposta: "hello",
+        dica: "Saudação em inglês"
+    }
+];
+
+// FASE 3: CIFRA DE CÉSAR (shift 3)
+const cipherMessages = [
+    {
+        textoCifrado: "WKH KXRVEH LV ZDWFKLQJ",
+        resposta: "the house is watching",
+        dica: "Cifra de César com deslocamento 3"
+    },
+    {
+        textoCifrado: "FRPH LQVLGH",
+        resposta: "come inside",
+        dica: "Desloque cada letra 3 posições para trás"
+    },
+    {
+        textoCifrado: "BRX DUH QRW DORQH",
+        resposta: "you are not alone",
+        dica: "Mensagem final da casa"
+    }
+];
+
+// Estado do jogo
+let faseAtual = 1;        // 1 = Morse, 2 = Binário, 3 = Cifra
+let indiceSubFase = 0;    // Índice dentro da fase
+let fasesDesbloqueadas = [true, false, false];  // Morse começa desbloqueado
 
 // Elementos DOM
+const puzzleTitle = document.getElementById('puzzleTitle');
 const morseDisplay = document.getElementById('morseDisplay');
-const morseInput = document.getElementById('morseInput');
-const decodeBtn = document.getElementById('decodeBtn');
+const answerInput = document.getElementById('answerInput');
+const submitBtn = document.getElementById('submitBtn');
 const logMessage = document.getElementById('logMessage');
+const hintMessage = document.getElementById('hintMessage');
 const dynamicLine = document.getElementById('dynamicLine');
+const step1El = document.getElementById('step1');
+const step2El = document.getElementById('step2');
+const step3El = document.getElementById('step3');
 
-// Atualiza o display com o morse da cena atual
-function updateMorse() {
-    if (currentScene < scenes.length) {
-        morseDisplay.innerText = scenes[currentScene].morse;
-        logMessage.innerHTML = `📻 [MENSAGEM ${currentScene+1}/${scenes.length}] Cientista fala em morse. Digite a tradução em inglês (minúsculas, sem pontuação).`;
-    } else {
-        morseDisplay.innerText = "... --- ... / ... --- ... / .-- . / .-- .- .. -";
-        logMessage.innerHTML = "✅ TODAS AS MENSAGENS DECODIFICADAS. O TERMINAL REVELOU O SEGREDO FINAL.";
-        dynamicLine.innerHTML = "> DR. VOSS E DRA. ELARA SUMIRAM. // A CASA SUSSURRA: 'WELCOME HOME'";
-    }
-}
-
-// Normaliza o texto para comparação (remove acentos, pontuação, espaços extras)
+// Função para normalizar texto (remover acentos, pontuação, espaços extras)
 function normalizeText(text) {
     return text.toLowerCase()
-        .replace(/[áàãâä]/g, 'a')
-        .replace(/[éèêë]/g, 'e')
-        .replace(/[íìîï]/g, 'i')
-        .replace(/[óòõôö]/g, 'o')
-        .replace(/[úùûü]/g, 'u')
-        .replace(/[ç]/g, 'c')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // remove acentos
         .replace(/[.,!?;:()]/g, '')
         .replace(/\s+/g, ' ')
         .trim();
 }
 
-// Evento do botão decodificar
-decodeBtn.addEventListener('click', () => {
-    // Se já completou todas as cenas
-    if (currentScene >= scenes.length) {
-        logMessage.innerHTML = "🏁 ARG concluído. A mensagem final ecoa: 'THIS HOUSE HELLO HOUSE HOUSE' — entre pela porta amarela.";
-        dynamicLine.innerHTML = "> ACESSO CONCEDIDO AO NÍVEL 18.7 // A CASA SABE SEU NOME";
-        return;
-    }
-
-    const userAnswer = normalizeText(morseInput.value);
-    const expected = scenes[currentScene].expected;
-
-    if (userAnswer === expected) {
-        // Resposta correta
-        logMessage.innerHTML = `✅ CORRETO! ${scenes[currentScene].response}`;
-        dynamicLine.innerHTML = `> [LOG ${currentScene+1}] ${scenes[currentScene].response.substring(0, 70)}...`;
-        
-        currentScene++;
-        morseInput.value = '';
-        
-        if (currentScene < scenes.length) {
-            updateMorse();
-            if (currentScene === scenes.length - 1) {
-                dynamicLine.innerHTML += " ⚠️ A PORTA DA CASA COMEÇA A RANGER.";
-            }
+// Atualiza a interface conforme a fase atual
+function updateUI() {
+    // Atualiza barra de progresso
+    if (fasesDesbloqueadas[0]) step1El.classList.add('unlocked');
+    else step1El.classList.remove('unlocked');
+    
+    if (fasesDesbloqueadas[1]) step2El.classList.add('unlocked');
+    else step2El.classList.remove('unlocked');
+    
+    if (fasesDesbloqueadas[2]) step3El.classList.add('unlocked');
+    else step3El.classList.remove('unlocked');
+    
+    // Define o título e o conteúdo do puzzle
+    if (faseAtual === 1) {
+        puzzleTitle.innerHTML = "📡 FASE 1: CÓDIGO MORSE";
+        if (indiceSubFase < morseMessages.length) {
+            morseDisplay.innerHTML = morseMessages[indiceSubFase].morse;
+            hintMessage.innerHTML = `🔎 Dica: ${morseMessages[indiceSubFase].dica}`;
         } else {
-            updateMorse();
-            // Final: revela combinação de cifras
-            setTimeout(() => {
-                logMessage.innerHTML += "<br><br>🔓 MENSAGEM FINAL DA IMAGEM DECODIFICADA:<br> CIFRA DE CÉSAR: 'THIS THIS HOUSE'<br> BINÁRIO: 'HOUSE'<br> MORSE: 'HELLO HOUSE'<br> → 'SAY HELLO TO THIS HOUSE'";
-                dynamicLine.innerHTML = "> // ACESSO TOTAL // A CASA SE ABRE. BEM-VINDO AO LAR.";
-            }, 800);
+            // Fase 1 concluída, avança para fase 2
+            faseAtual = 2;
+            indiceSubFase = 0;
+            updateUI();
         }
-    } else {
-        logMessage.innerHTML = `❌ INCORRETO. O cientista repete o sinal... Tente novamente. (Dica: nomes Voss/Elara, inglês simples)`;
-        dynamicLine.innerHTML = "> ESTÁTICA // RESPOSTA NEGADA // TENTE NOVAMENTE";
     }
+    else if (faseAtual === 2) {
+        puzzleTitle.innerHTML = "💻 FASE 2: CÓDIGO BINÁRIO";
+        if (indiceSubFase < binaryMessages.length) {
+            morseDisplay.innerHTML = binaryMessages[indiceSubFase].binario;
+            hintMessage.innerHTML = `🔎 Dica: ${binaryMessages[indiceSubFase].dica}`;
+        } else {
+            faseAtual = 3;
+            indiceSubFase = 0;
+            updateUI();
+        }
+    }
+    else if (faseAtual === 3) {
+        puzzleTitle.innerHTML = "🔐 FASE 3: CIFRA DE CÉSAR (shift 3)";
+        if (indiceSubFase < cipherMessages.length) {
+            morseDisplay.innerHTML = cipherMessages[indiceSubFase].textoCifrado;
+            hintMessage.innerHTML = `🔎 Dica: ${cipherMessages[indiceSubFase].dica}`;
+        } else {
+            // JOGO CONCLUÍDO
+            morseDisplay.innerHTML = "🏆 TODAS AS FASES CONCLUÍDAS 🏆";
+            answerInput.disabled = true;
+            submitBtn.disabled = true;
+            logMessage.innerHTML = "✅ PARABÉNS! Você desvendou todos os mistérios da casa.\n\nA mensagem final: 'SAY HELLO TO THIS HOUSE' — A casa agora te conhece.";
+            dynamicLine.innerHTML = "> ACESSO TOTAL CONCEDIDO // BEM-VINDO AO LAR // A CASA SABE SEU NOME";
+            return;
+        }
+    }
+    
+    // Limpa o campo de resposta
+    answerInput.value = '';
+    logMessage.innerHTML = `⚡ [FASE ${faseAtual}] Aguardando resposta...`;
+}
+
+// Verifica a resposta do jogador
+function checkAnswer() {
+    let userAnswer = normalizeText(answerInput.value);
+    let isCorrect = false;
+    
+    if (faseAtual === 1 && indiceSubFase < morseMessages.length) {
+        const expected = morseMessages[indiceSubFase].resposta;
+        if (userAnswer === expected) {
+            isCorrect = true;
+            logMessage.innerHTML = `✅ CORRETO! Mensagem ${indiceSubFase+1}/${morseMessages.length} decifrada.`;
+            dynamicLine.innerHTML = `> [MORSE] ${morseMessages[indiceSubFase].resposta.substring(0, 50)}...`;
+            indiceSubFase++;
+            
+            // Se terminou a fase 1, desbloqueia fase 2
+            if (indiceSubFase >= morseMessages.length) {
+                fasesDesbloqueadas[1] = true;
+                logMessage.innerHTML += "<br>🔓 FASE 2 DESBLOQUEADA! Agora decifre os códigos binários.";
+                dynamicLine.innerHTML += " // BINÁRIO DETECTADO NAS PAREDES";
+            }
+            updateUI();
+        }
+    }
+    else if (faseAtual === 2 && indiceSubFase < binaryMessages.length) {
+        const expected = binaryMessages[indiceSubFase].resposta;
+        if (userAnswer === expected) {
+            isCorrect = true;
+            logMessage.innerHTML = `✅ CORRETO! Binário ${indiceSubFase+1}/${binaryMessages.length} decifrado.`;
+            dynamicLine.innerHTML = `> [BINÁRIO] ${binaryMessages[indiceSubFase].resposta}`;
+            indiceSubFase++;
+            
+            if (indiceSubFase >= binaryMessages.length) {
+                fasesDesbloqueadas[2] = true;
+                logMessage.innerHTML += "<br>🔓 FASE 3 DESBLOQUEADA! Agora decifre a Cifra de César.";
+                dynamicLine.innerHTML += " // CIFRA DETECTADA NOS VIDROS DAS JANELAS";
+            }
+            updateUI();
+        }
+    }
+    else if (faseAtual === 3 && indiceSubFase < cipherMessages.length) {
+        const expected = cipherMessages[indiceSubFase].resposta;
+        if (userAnswer === expected) {
+            isCorrect = true;
+            logMessage.innerHTML = `✅ CORRETO! Cifra ${indiceSubFase+1}/${cipherMessages.length} decifrada.`;
+            dynamicLine.innerHTML = `> [CIFRA] ${cipherMessages[indiceSubFase].resposta}`;
+            indiceSubFase++;
+            updateUI();
+        }
+    }
+    
+    if (!isCorrect && faseAtual <= 3) {
+        logMessage.innerHTML = `❌ RESPOSTA INCORRETA. Tente novamente.\nDica: ${hintMessage.innerText}`;
+        dynamicLine.innerHTML = "> ESTÁTICA // ACESSO NEGADO // TENTE NOVAMENTE";
+    }
+}
+
+// Evento do botão
+submitBtn.addEventListener('click', checkAnswer);
+
+// Permitir enviar com Enter
+answerInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkAnswer();
 });
 
 // Easter egg: clique nos cantos da imagem
@@ -118,15 +225,15 @@ if (img) {
         const width = rect.width;
         const height = rect.height;
         
-        // Canto superior esquerdo ou inferior direito
         if ((x < 80 && y < 80) || (x > width - 80 && y > height - 80)) {
-            logMessage.innerHTML = "🔍 Você encontrou um fragmento binário no canto da imagem: 01001000 01001111 01010101 01010011 01000101 = HOUSE";
-            dynamicLine.innerHTML = "> BINÁRIO REVELADO // A CASA SUSSURRA SEU NOME";
-        } else {
-            logMessage.innerHTML = "📟 A imagem emite baixa frequência... tente os cantos.";
+            logMessage.innerHTML = "🔍 Você encontrou um fragmento oculto: 'A CASA RESPIRA EM 18.7 Hz'";
+            dynamicLine.innerHTML = "> FREQUÊNCIA OCULTA REVELADA // 18.7 Hz";
+        } else if ((x < width && x > width-100) && (y < 100)) {
+            logMessage.innerHTML = "📟 Mensagem em néon piscando: 'VOCÊ JÁ ESTVE AQUI'";
+            dynamicLine.innerHTML = "> MEMÓRIA CORROMPIDA // ACESSO PARCIAL";
         }
     });
 }
 
 // Inicializa o jogo
-updateMorse();
+updateUI();
