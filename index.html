@@ -3,163 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A CASA SABE SEU NOME</title>
+    <title>CRACKS IN THE WALL /// ARG</title>
     <style>
+        /* RESET E BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #0a0a0a;
-            font-family: 'Courier New', monospace;
+            background: #0a0806;
+            font-family: 'Courier New', 'Segoe UI', monospace;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 1.5rem;
         }
+
+        /* EFEITO CRT */
         .crt::before {
             content: " ";
             display: block;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.03) 0px, rgba(0, 255, 0, 0.03) 2px, transparent 2px, transparent 6px);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.02) 0px, rgba(0,255,0,0.02) 2px, transparent 2px, transparent 6px);
             pointer-events: none;
             z-index: 9999;
         }
+
+        /* CONTAINER */
         .container {
-            max-width: 700px;
+            max-width: 800px;
             width: 100%;
-            background: #000000cc;
-            border: 2px solid #5e4a2b;
+            background: #0d0a07;
+            border: 3px solid #4a3a1a;
+            border-radius: 20px;
             padding: 2rem;
-            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(60, 40, 10, 0.3);
         }
+
+        /* HEADER */
         .header {
             text-align: center;
-            border-bottom: 1px dashed #5e4a2b;
+            border-bottom: 2px dashed #4a3a1a;
             padding-bottom: 1rem;
             margin-bottom: 1.5rem;
         }
-        h1 {
-            color: #efdba1;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
+        .header h1 {
+            color: #d4b87a;
+            font-size: 2rem;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #8a6a2a;
             font-weight: normal;
         }
-        .sub {
-            color: #6c5d3a;
-            font-size: 0.7rem;
-            margin-top: 4px;
+        .header .sub {
+            color: #6a5a3a;
+            font-size: 0.75rem;
+            margin-top: 5px;
         }
+
+        /* IMAGEM DA CASA */
         .image-frame {
-            background: #1a1509;
+            background: #0f0b06;
             border: 3px solid #3a2f1a;
+            border-radius: 10px;
             padding: 6px;
             margin-bottom: 1.5rem;
+            position: relative;
         }
         .backrooms-img {
             width: 100%;
             display: block;
-            filter: brightness(0.8) contrast(1.2) sepia(0.3);
+            border-radius: 6px;
+            filter: brightness(0.75) contrast(1.1) sepia(0.4);
+            cursor: crosshair;
         }
-        .radio-panel {
+        .image-hint {
+            text-align: center;
+            color: #4a3a1a;
+            font-size: 0.6rem;
+            margin-top: 4px;
+        }
+
+        /* DESENHO DO DR. VOSS (ANIME) */
+        .voss-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #0f0b06;
+            border-radius: 15px;
+            padding: 12px;
+            margin-bottom: 1.2rem;
+            border: 1px solid #3a2f1a;
+            transition: all 0.3s;
+        }
+        .voss-avatar {
+            width: 70px;
+            height: 70px;
+            background: #1a140a;
+            border-radius: 50%;
+            border: 2px solid #8a7a5a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .voss-avatar svg {
+            width: 60px;
+            height: 60px;
+        }
+        .voss-name {
+            color: #b89a5a;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .voss-speech {
+            color: #d4c8a0;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+        .voss-status {
+            color: #6a7a4a;
+            font-size: 0.7rem;
+            margin-left: auto;
             background: #0a0a05;
-            border-left: 4px solid #dbb42c;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #3a4a2a;
+        }
+
+        /* PAINEL DE COMUNICAÇÃO */
+        .radio-panel {
+            background: #0a0805;
+            border-left: 4px solid #b89a5a;
             padding: 1.2rem;
-            margin-bottom: 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 1.2rem;
         }
-        .message {
-            color: #e0cca6;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-            min-height: 4rem;
+        .radio-panel .message {
+            color: #d4c8a0;
+            font-size: 1rem;
+            min-height: 3.5rem;
+            line-height: 1.5;
         }
+        .radio-panel .message .highlight {
+            color: #d4b87a;
+            font-weight: bold;
+        }
+        .radio-panel .message .static {
+            color: #6a5a3a;
+            animation: blink 0.5s infinite alternate;
+        }
+
         .response-area {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            margin-top: 15px;
         }
-        input {
+        .response-area input {
             flex: 2;
-            background: #1e1b12;
-            border: 1px solid #5e4a2b;
-            color: #f7eac5;
-            padding: 10px;
-            font-family: monospace;
+            background: #1a140a;
+            border: 1px solid #4a3a1a;
+            color: #d4c8a0;
+            padding: 12px 15px;
+            font-family: 'Courier New', monospace;
             font-size: 0.9rem;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.2s;
         }
-        button {
-            background: #3a2f1a;
-            border: none;
-            color: #efdba1;
-            padding: 10px 20px;
-            font-family: monospace;
+        .response-area input:focus {
+            border-color: #b89a5a;
+            box-shadow: 0 0 10px #b89a5a22;
+        }
+        .response-area button {
+            background: #2a2010;
+            border: 1px solid #5a4a2a;
+            color: #d4b87a;
+            padding: 12px 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border-radius: 8px;
             cursor: pointer;
+            transition: 0.2s;
         }
-        button:hover { background: #5e4a2b; }
+        .response-area button:hover {
+            background: #3a2f1a;
+            border-color: #b89a5a;
+            box-shadow: 0 0 15px #b89a5a33;
+        }
+        .response-area button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         .log {
-            margin-top: 1rem;
-            color: #6c5d3a;
-            font-size: 0.8rem;
-            border-top: 1px dotted #3a2f1a;
-            padding-top: 0.8rem;
+            margin-top: 12px;
+            color: #6a5a3a;
+            font-size: 0.75rem;
+            border-top: 1px dotted #2a2010;
+            padding-top: 10px;
         }
+
+        /* TERMINAL */
         .terminal {
-            background: #030301;
-            padding: 0.8rem;
-            border: 1px solid #3a2f1a;
+            background: #050302;
+            padding: 0.8rem 1rem;
+            border: 1px solid #2a2010;
+            border-radius: 8px;
             font-size: 0.7rem;
             color: #4a7a3a;
+            margin-top: 0.5rem;
         }
-        .terminal-line {
-            padding: 2px 0;
-            border-bottom: 1px dotted #1a1a0a;
+        .terminal .line {
+            padding: 3px 0;
+            border-bottom: 1px dotted #0a0a05;
         }
         .blink {
             animation: blink 1s step-end infinite;
         }
-        @keyframes blink { 50% { opacity: 0; } }
-        .tape {
-            animation: tapeGlitch 0.3s infinite alternate;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
-        @keyframes tapeGlitch {
-            0% { opacity: 1; transform: translateX(0); }
-            100% { opacity: 0.5; transform: translateX(3px); }
+        .glitch-text {
+            animation: glitch 0.3s infinite alternate;
         }
+        @keyframes glitch {
+            0% { transform: translateX(-2px); opacity: 0.8; }
+            100% { transform: translateX(2px); opacity: 1; }
+        }
+
         footer {
             text-align: center;
             margin-top: 1.5rem;
             font-size: 0.6rem;
-            color: #3a2f1a;
+            color: #2a2010;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .voss-container { flex-wrap: wrap; }
+            .voss-status { margin-left: 0; }
         }
     </style>
 </head>
 <body class="crt">
     <div class="container">
+        <!-- HEADER -->
         <div class="header">
-            <h1>🏚️ A CASA SABE SEU NOME 🏚️</h1>
-            <div class="sub">[ FREQ: 18.7 Hz || SINAL INSTÁVEL ]</div>
-            <div class="sub">✦ VOCÊ É ELARA. VOSS ESTÁ DO LADO DE FORA. ✦</div>
+            <h1>🏚️ CRACKS IN THE WALL 🏚️</h1>
+            <div class="sub">[ INSTALAÇÃO NEXUS-3 // FREQ: 18.7 Hz ]</div>
+            <div class="sub">✦ ELARA — VOCÊ ACORDOU SEM MEMÓRIA ✦</div>
         </div>
 
+        <!-- IMAGEM -->
         <div class="image-frame">
             <img class="backrooms-img" id="mainImage" src="https://i.ibb.co/q4XLK0J/file-00000000db30720eb87e48c6f04646bc.png" alt="Casa">
+            <div class="image-hint">⬆️ A casa está observando</div>
         </div>
 
-        <div class="radio-panel">
-            <div class="message" id="receivedMessage">📡 Dr. Voss: "Elara... você entrou? A porta fechou atrás de você."</div>
-            <div class="response-area">
-                <input type="text" id="answerInput" placeholder="Sua resposta..." autocomplete="off">
-                <button id="submitBtn">📡 RESPONDER</button>
+        <!-- DR. VOSS ANIME -->
+        <div class="voss-container" id="vossContainer">
+            <div class="voss-avatar">
+                <svg viewBox="0 0 100 100">
+                    <!-- Cabelo -->
+                    <ellipse cx="50" cy="35" rx="35" ry="30" fill="#3a3a2a"/>
+                    <ellipse cx="30" cy="25" rx="15" ry="18" fill="#2a2a1a"/>
+                    <ellipse cx="70" cy="25" rx="15" ry="18" fill="#2a2a1a"/>
+                    <!-- Rosto -->
+                    <circle cx="50" cy="45" r="28" fill="#d4c8a0"/>
+                    <!-- Olhos -->
+                    <ellipse cx="40" cy="42" rx="5" ry="6" fill="#1a140a"/>
+                    <ellipse cx="60" cy="42" rx="5" ry="6" fill="#1a140a"/>
+                    <circle cx="42" cy="40" r="2" fill="#fff" opacity="0.6"/>
+                    <circle cx="62" cy="40" r="2" fill="#fff" opacity="0.6"/>
+                    <!-- Óculos -->
+                    <rect x="33" y="37" width="14" height="12" rx="3" fill="none" stroke="#4a3a1a" stroke-width="2"/>
+                    <rect x="53" y="37" width="14" height="12" rx="3" fill="none" stroke="#4a3a1a" stroke-width="2"/>
+                    <line x1="47" y1="43" x2="53" y2="43" stroke="#4a3a1a" stroke-width="2"/>
+                    <!-- Boca -->
+                    <path d="M42 54 Q50 60 58 54" fill="none" stroke="#6a4a2a" stroke-width="2"/>
+                    <!-- Jaleco -->
+                    <rect x="20" y="68" width="60" height="25" rx="4" fill="#8a9a8a"/>
+                    <rect x="25" y="68" width="20" height="15" rx="2" fill="#9aaa9a"/>
+                    <rect x="55" y="68" width="20" height="15" rx="2" fill="#9aaa9a"/>
+                    <!-- Botões do jaleco -->
+                    <circle cx="50" cy="72" r="3" fill="#6a7a6a"/>
+                    <circle cx="50" cy="82" r="3" fill="#6a7a6a"/>
+                </svg>
             </div>
-            <div class="log" id="logMessage">⚡ Elara... responda.</div>
+            <div>
+                <div class="voss-name">🧑‍🔬 DR. VOSS</div>
+                <div class="voss-speech" id="vossSpeech">"Elara... você está aí?"</div>
+            </div>
+            <div class="voss-status" id="vossStatus">🟢 CONECTADO</div>
         </div>
 
+        <!-- PAINEL -->
+        <div class="radio-panel">
+            <div class="message" id="receivedMessage">
+                <span class="highlight">Dr. Voss:</span> "Elara... você acordou. Não se assuste. Você está na Instalação Nexus-3. Eu estou do lado de fora."
+            </div>
+            <div class="response-area">
+                <input type="text" id="answerInput" placeholder="Digite sua resposta..." autocomplete="off">
+                <button id="submitBtn">📡 RESPONDER</button>
+                <button id="helpBtn">❓ DICA</button>
+            </div>
+            <div class="log" id="logMessage">⚡ Elara... responda ao Voss.</div>
+        </div>
+
+        <!-- TERMINAL -->
         <div class="terminal">
-            <div class="terminal-line">> SISTEMA DE COMUNICAÇÃO // SUBLEVEL_3</div>
-            <div class="terminal-line" id="dynamicLine">> Dr. Voss aguarda sua resposta.</div>
-            <div class="terminal-line blink">> _</div>
+            <div class="line">> SISTEMA NEXUS-3 // SUBLEVEL_3 // CONEXÃO INSTÁVEL</div>
+            <div class="line" id="dynamicLine">> Dr. Voss aguarda sua resposta.</div>
+            <div class="line blink">> _</div>
         </div>
 
         <footer>⚠️ NÃO CORTE O SINAL ⚠️</footer>
@@ -167,7 +326,7 @@
 
     <script>
         // ============================================
-        // ÁUDIO DE ESTÁTICA (fundo)
+        // 1. ÁUDIO DE ESTÁTICA (fundo)
         // ============================================
         let audioCtx = null;
         let staticSource = null;
@@ -178,7 +337,7 @@
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             staticGain = audioCtx.createGain();
-            staticGain.gain.value = 0.1;
+            staticGain.gain.value = 0.08;
             staticGain.connect(audioCtx.destination);
             generateStatic();
         }
@@ -203,55 +362,96 @@
         });
 
         // ============================================
-        // ROTEIRO DO ARG (6 fases + final)
+        // 2. VOZ SINTETIZADA DO VOSS (sem áudio externo)
+        // ============================================
+        function speakAsVoss(texto, velocidade = 0.8) {
+            if (!window.speechSynthesis) return;
+            const utterance = new SpeechSynthesisUtterance(texto);
+            const voices = speechSynthesis.getVoices();
+            utterance.voice = voices.find(v => v.lang.includes('pt')) || voices[0];
+            utterance.rate = velocidade;
+            utterance.pitch = 0.7;
+            utterance.volume = 0.7;
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+            // Atualiza o balão do Voss
+            document.getElementById('vossSpeech').innerHTML = `"${texto}"`;
+            document.getElementById('vossStatus').innerHTML = '🔊 FALANDO';
+            document.getElementById('vossStatus').style.color = '#b89a5a';
+            setTimeout(() => {
+                document.getElementById('vossStatus').innerHTML = '🟢 CONECTADO';
+                document.getElementById('vossStatus').style.color = '#6a7a4a';
+            }, 3000);
+        }
+
+        // ============================================
+        // 3. ROTEIRO DO ARG
         // ============================================
         const fases = [
             {
-                mensagem: '📡 Dr. Voss: "Elara... você entrou? A porta fechou atrás de você. Me responda."',
-                respostaCorreta: "sim",
-                dica: "Diga que sim.",
-                vossFala: "Elara, responde! A porta fechou!"
+                id: 0,
+                mensagem: `<span class="highlight">Dr. Voss:</span> "Elara... você acordou. Não se assuste. Você está na Instalação Nexus-3. Eu estou do lado de fora. Me diga... o que você vê?"`,
+                respostaCorreta: ["amarelo", "parede amarela", "sala amarela", "luz amarela"],
+                dica: "Descreva a cor da sala.",
+                falaVoss: "Elara, o que você vê? Descreva a cor.",
+                terminal: "> Voss: 'Descreva a sala, Elara.'"
             },
             {
-                mensagem: '📡 Dr. Voss: "Tem um corredor à sua frente. Elara... o que você vê?"',
-                respostaCorreta: "amarelo",
-                dica: "Descreva a cor do corredor.",
-                vossFala: "Elara, foca! O que tem à sua frente?"
+                id: 1,
+                mensagem: `<span class="highlight">Dr. Voss:</span> "Certo... sala amarela. Isso é típico do Nível 3. Elara... você está ouvindo um barulho? Um zumbido?"`,
+                respostaCorreta: ["sim", "ouço", "sim ouço", "zumbido"],
+                dica: "Você está ouvindo algo?",
+                falaVoss: "O zumbido... Elara, me diga se você ouve.",
+                terminal: "> Voss: 'O zumbido é importante.'"
             },
             {
-                mensagem: '📡 Dr. Voss: "Elara... você ouviu isso? Alguém sussurrou seu nome."',
-                respostaCorreta: "ouvi",
-                dica: "Diga se ouviu ou não.",
-                vossFala: "Não é brincadeira, Elara. Me diz se ouviu."
+                id: 2,
+                mensagem: `<span class="highlight">Dr. Voss:</span> "Elara, tem uma porta à sua frente. Está aberta? Me diga o que você vê."`,
+                respostaCorreta: ["aberta", "porta aberta", "ta aberta", "está aberta"],
+                dica: "A porta está aberta ou fechada?",
+                falaVoss: "Elara, a porta... está aberta?",
+                terminal: "> Voss: 'Não entre ainda.'"
             },
             {
-                mensagem: '📡 Dr. Voss: "Elara, tem algo escrito na parede. O que diz?"',
-                respostaCorreta: "bem vindo",
-                dica: "O que está escrito na parede?",
-                vossFala: "Lê direito, Elara! O que tá escrito?"
+                id: 3,
+                mensagem: `<span class="highlight">Dr. Voss:</span> "Parece que há alguém lá dentro... Elara, NÃO ENTRE. Eu vou buscar ajuda. FIQUE AÍ. Você entendeu?"`,
+                respostaCorreta: ["entendi", "sim", "fico", "vou ficar"],
+                dica: "Confirme que vai ficar.",
+                falaVoss: "Elara, você entendeu? FIQUE AÍ.",
+                terminal: "> Voss: 'Não faça nada até eu voltar.'"
             },
             {
-                mensagem: '📡 Dr. Voss: "Elara... alguém tocou no seu ombro. Quem é?"',
-                respostaCorreta: "ninguem",
-                dica: "Tem alguém aí?",
-                vossFala: "Responde, Elara! Quem tá aí?"
+                id: 4,
+                mensagem: `<span class="highlight">Dr. Voss:</span> "Elara... a figura na janela... ela não é humana. Me responda! Você ainda está aí?"`,
+                respostaCorreta: ["estou", "sim", "to aqui", "estou aqui"],
+                dica: "Confirme que está aí.",
+                falaVoss: "Elara, responde! Você ainda está aí?",
+                terminal: "> Voss: 'O sinal está piorando.'"
             },
             {
-                mensagem: '📡 Dr. Voss: "Elara... a casa... ela tá... (estática)... VOSS? VOSS!"',
-                respostaCorreta: "voss sumiu",
-                dica: "O que aconteceu com o Voss?",
-                vossFala: "Elara... a casa... ela tá..."
+                id: 5,
+                mensagem: `<span class="highlight">Dr. Voss:</span> "Elara... a figura está se movendo em direção à porta. CORRA PARA A SAÍDA! Agora!"`,
+                respostaCorreta: ["correndo", "to correndo", "estou correndo", "saída"],
+                dica: "O que você está fazendo?",
+                falaVoss: "Elara, corre! A saída está à sua esquerda!",
+                terminal: "> Voss: 'CORRA, ELARA!'"
             }
         ];
 
+        // Personagem extra: LYDIA (aparece no final)
+        const mensagemLydia = `<span class="highlight" style="color:#8a6a8a;">Lydia:</span> "Elara... Eu sou Lydia, técnica de segurança. Não confie no Voss. Ele não está do lado de fora. Ele está DENTRO da casa."`;
+
         let faseAtual = 0;
         let jogoConcluido = false;
+        let lydiaRevelada = false;
+
         const receivedMsg = document.getElementById('receivedMessage');
         const answerInput = document.getElementById('answerInput');
         const submitBtn = document.getElementById('submitBtn');
+        const helpBtn = document.getElementById('helpBtn');
         const logMessage = document.getElementById('logMessage');
         const dynamicLine = document.getElementById('dynamicLine');
-        const container = document.querySelector('.container');
+        const vossSpeech = document.getElementById('vossSpeech');
 
         function atualizarFase() {
             if (jogoConcluido) return;
@@ -262,8 +462,11 @@
             const fase = fases[faseAtual];
             receivedMsg.innerHTML = fase.mensagem;
             logMessage.innerHTML = `⚡ [FASE ${faseAtual+1}/${fases.length}] ${fase.dica}`;
-            dynamicLine.innerHTML = `> Dr. Voss: "${fase.vossFala}"`;
+            dynamicLine.innerHTML = fase.terminal;
+            vossSpeech.innerHTML = `"${fase.falaVoss}"`;
             answerInput.value = '';
+            answerInput.disabled = false;
+            submitBtn.disabled = false;
             answerInput.focus();
         }
 
@@ -272,10 +475,16 @@
             const user = answerInput.value.trim().toLowerCase();
             const fase = fases[faseAtual];
             
-            if (user.includes(fase.respostaCorreta.toLowerCase())) {
-                // Acertou
+            // Verifica se a resposta contém alguma das palavras-chave
+            const acertou = fase.respostaCorreta.some(palavra => user.includes(palavra));
+            
+            if (acertou) {
+                // ACERTOU
                 logMessage.innerHTML = `✅ Elara: "${user}" → Sinal estável.`;
                 dynamicLine.innerHTML = `> Voss: "Certo, Elara. Continua."`;
+                // Fala do Voss (sintetizada)
+                speakAsVoss(fase.falaVoss, 0.8);
+                // Avança
                 faseAtual++;
                 if (faseAtual < fases.length) {
                     atualizarFase();
@@ -283,71 +492,28 @@
                     finalDoJogo();
                 }
             } else {
-                // Errou
+                // ERROU
                 logMessage.innerHTML = `❌ Voss não entendeu. ${fase.dica}`;
-                dynamicLine.innerHTML = `> Voss repete: "${fase.vossFala}"`;
-                // Efeito de glitch visual
-                container.classList.add('tape');
-                setTimeout(() => container.classList.remove('tape'), 500);
-                // Aumenta estática
+                dynamicLine.innerHTML = `> Voss repete: "${fase.falaVoss}"`;
+                // Efeito de estática
                 if (audioCtx) {
-                    staticGain.gain.value = 0.25;
-                    setTimeout(() => staticGain.gain.value = 0.1, 1000);
+                    staticGain.gain.value = 0.2;
+                    setTimeout(() => staticGain.gain.value = 0.08, 800);
                 }
+                // Efeito visual
+                document.querySelector('.container').style.borderColor = '#6a2a1a';
+                setTimeout(() => document.querySelector('.container').style.borderColor = '#4a3a1a', 500);
+                answerInput.value = '';
+                answerInput.focus();
             }
-            answerInput.value = '';
         }
 
         function finalDoJogo() {
             jogoConcluido = true;
-            receivedMsg.innerHTML = '💀 [SINAL PERDIDO] A casa sussurra: "Elara... você nunca esteve com Voss. Ele morreu há 3 anos. Você está sozinha."';
             answerInput.disabled = true;
             submitBtn.disabled = true;
-            logMessage.innerHTML = "🏚️ FIM. A casa agora te observa em silêncio. Uma silhueta aparece na janela.";
-            dynamicLine.innerHTML = "> TRANSMISSÃO ENCERRADA // A CASA SABE SEU NOME";
-            container.classList.add('tape');
             
-            // Áudio grave 18.7 Hz
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.frequency.value = 18.7;
-                gain.gain.value = 0.08;
-                osc.start();
-                setTimeout(() => ctx.close(), 3000);
-            } catch(e) {}
-            
-            setTimeout(() => {
-                const overlay = document.createElement('div');
-                overlay.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:100000; display:flex; align-items:center; justify-content:center; flex-direction:column; color:#ffcc66; text-align:center; font-family:monospace; padding:20px;";
-                overlay.innerHTML = `
-                    <h1 style="font-size:2.5rem;">🏚️ A CASA SABE SEU NOME 🏚️</h1>
-                    <p style="font-size:1.2rem; margin-top:20px;">"Elara... você nunca esteve com Voss."</p>
-                    <p style="font-size:1rem; margin-top:10px; color:#886633;">Ele morreu há 3 anos. Você está sozinha.</p>
-                    <p style="font-size:0.8rem; margin-top:20px; color:#553322;">[ 18.7 Hz — A casa está respirando ]</p>
-                    <button id="resetBtn" style="margin-top:30px; padding:10px 20px; background:#332211; color:white; border:1px solid #ffcc66; cursor:pointer;">🔁 REINICIAR</button>
-                `;
-                document.body.appendChild(overlay);
-                document.getElementById('resetBtn').onclick = () => location.reload();
-            }, 2000);
-        }
-
-        submitBtn.addEventListener('click', checkAnswer);
-        answerInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAnswer(); });
-
-        // Easter egg: clique na imagem
-        document.querySelector('.backrooms-img').addEventListener('click', () => {
-            logMessage.innerHTML = "🔍 Você encostou na tela. A imagem parece pulsar. 18.7 Hz.";
-            if (audioCtx) {
-                staticGain.gain.value = 0.2;
-                setTimeout(() => staticGain.gain.value = 0.1, 500);
-            }
-        });
-
-        atualizarFase();
-    </script>
-</body>
-</html>
+            // Revelação com Lydia
+            receivedMsg.innerHTML = mensagemLydia;
+            logMessage.innerHTML = "💀 FIM. A verdade é pior que o pesadelo.";
+            dynamicLine.innerHTML = "> SINAL DE LYDI
