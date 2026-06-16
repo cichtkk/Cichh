@@ -189,7 +189,8 @@
         </div>
 
         <div class="image-frame">
-            <img class="backrooms-img" id="mainImage" src="https://img.sanishtech.com/u/e0c1c88b43e695f3562a09fd55c53ab2.png" alt="Casa misteriosa">
+            <!-- IMAGEM CORRETA ATUALIZADA -->
+            <img class="backrooms-img" id="mainImage" src="https://i.ibb.co/q4XLK0J/file-00000000db30720eb87e48c6f04646bc.png" alt="Casa misteriosa nas Backrooms">
             <div class="image-hint">⬆️ A casa está observando</div>
         </div>
 
@@ -289,19 +290,15 @@
             return curve;
         }
 
-        // EFEITO FITA ENROS-C-C-CANDO
         function applyTapeStuckEffect(source, audioCtx, intensity = 'medium') {
-            // 1. Cria um "stutter" (travamento) aleatório
             const stutterGain = audioCtx.createGain();
             stutterGain.gain.value = 1;
             
-            // 2. Filtro que oscila (simula a fita "enroscando")
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.value = 2000;
             filter.Q.value = 5;
             
-            // 3. Oscilador para modular o filtro (cria o efeito de "derretimento")
             const lfo = audioCtx.createOscillator();
             lfo.frequency.value = intensity === 'heavy' ? 4 : (intensity === 'medium' ? 2 : 1);
             lfo.type = 'sawtooth';
@@ -311,26 +308,22 @@
             lfoGain.connect(filter.frequency);
             lfo.start();
             
-            // 4. Distorção extra (fita gasta)
             const distortion = audioCtx.createWaveShaper();
             distortion.curve = createDistortionCurve(intensity === 'heavy' ? 0.6 : (intensity === 'medium' ? 0.3 : 0.1));
             distortion.oversample = '4x';
             
-            // 5. Delay com feedback (eco "enroscado")
             const delay = audioCtx.createDelay(0.3);
             const delayGain = audioCtx.createGain();
             delayGain.gain.value = intensity === 'heavy' ? 0.6 : (intensity === 'medium' ? 0.3 : 0.1);
             delay.connect(delayGain);
             delayGain.connect(delay);
             
-            // Conecta tudo em cadeia
             source.connect(stutterGain);
             stutterGain.connect(filter);
             filter.connect(distortion);
             distortion.connect(delay);
             delay.connect(audioCtx.destination);
             
-            // 6. Efeito de "travamento" (stutter) - pausa e repete frações
             if (intensity !== 'light') {
                 const stutterInterval = setInterval(() => {
                     if (Math.random() > 0.7) {
@@ -339,12 +332,9 @@
                         setTimeout(() => stutterGain.gain.value = 1, 100);
                     }
                 }, 300);
-                
-                // Para o stutter após 5 segundos
                 setTimeout(() => clearInterval(stutterInterval), 5000);
             }
             
-            // Para o LFO quando o áudio acabar
             setTimeout(() => {
                 try { lfo.stop(); } catch(e) {}
                 try { delayGain.disconnect(); } catch(e) {}
@@ -372,7 +362,6 @@
                         if (intensity !== 'none') {
                             applyTapeStuckEffect(source, audioCtx, intensity);
                         } else {
-                            // Sem efeito de fita, só filtro básico
                             const filter = audioCtx.createBiquadFilter();
                             filter.type = 'highpass';
                             filter.frequency.value = 200;
@@ -401,7 +390,6 @@
             speechSynthesis.cancel();
             speechSynthesis.speak(utterance);
             
-            // Chiado extra quando enrosca
             if (audioCtx && staticEnabled) {
                 const chirp = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -488,7 +476,6 @@
             dynamicLine.innerHTML = `> Dr. Voss aguarda sua resposta...`;
             playVossAudio(fase.vossFala, fase.vossAudio, fase.intensidadeFita);
             
-            // Se a intensidade for heavy, aplica glitch na tela
             if (fase.intensidadeFita === 'heavy') {
                 document.querySelector('.container').classList.add('tape-warning');
             } else {
@@ -513,13 +500,10 @@
                     finalDoJogo();
                 }
             } else {
-                // ERRO: aplica efeito de fita enroscando LEVE (para assustar)
                 logMessage.innerHTML = `❌ Dr. Voss não entendeu. ${fase.dica} Tente novamente.`;
                 dynamicLine.innerHTML = `> 🌀 FITA ENROS-C-C-CANDO... Voss repete: "${fase.vossFala}"`;
-                // Toca o áudio com efeito de fita leve (travamento)
                 playVossAudio(fase.vossFala, fase.vossAudio, 'light');
                 
-                // Efeito visual de glitch no texto
                 const msg = document.getElementById('receivedMessage');
                 msg.style.transition = 'all 0.1s';
                 msg.style.transform = 'translateX(5px)';
@@ -538,7 +522,6 @@
             dynamicLine.innerHTML = "> 🌀 FITA ENROS-C-C-CANDO // TRANSMISSÃO ENCERRADA";
             playVossAudio("Elara... ele está atrás de você...", "voss_desaparece.mp3", "heavy");
             
-            // Efeito visual de fita enroscando pesado
             document.querySelector('.container').classList.add('tape-warning');
             document.querySelector('.container').style.animation = 'tapeGlitch 0.15s infinite alternate';
             
